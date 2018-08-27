@@ -33,9 +33,9 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 p2/p2Json.cpp
-badd +0 p2/p2Json.h
-badd +0 p2/p2Main.cpp
+badd +1 p2/p2Json.cpp
+badd +1 p2/p2Json.h
+badd +1 p2/p2Main.cpp
 argglobal
 silent! argdel *
 argadd p2/p2Json.cpp
@@ -158,11 +158,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 7 - ((6 * winheight(0) + 21) / 42)
+let s:l = 1 - ((0 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-7
+1
 normal! 0
 tabedit p2/p2Json.h
 set splitbelow splitright
@@ -288,12 +288,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 23 - ((21 * winheight(0) + 21) / 42)
+let s:l = 43 - ((39 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-23
-normal! 0
+43
+normal! 019|
 wincmd w
 argglobal
 edit p2/p2Json.cpp
@@ -408,14 +408,13 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 8 - ((7 * winheight(0) + 21) / 42)
+let s:l = 81 - ((36 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-8
-normal! 0
+81
+normal! 022|
 wincmd w
-2wincmd w
 exe 'vert 1resize ' . ((&columns * 96 + 96) / 192)
 exe 'vert 2resize ' . ((&columns * 95 + 96) / 192)
 tabnext 2
