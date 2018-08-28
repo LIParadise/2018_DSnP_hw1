@@ -19,12 +19,7 @@ Json::read(const string& jsonFile)
   fstream fs;
   fs.open( jsonFile );
 
-  if( fs.good() ){
-    parse( fs );
-    return true;
-  }else{
-    return false;
-  }
+  return ( fs.good() && parse( fs ) );
 
   // TODO ...Done
 }
@@ -34,51 +29,48 @@ Json::parse( const fstream& file ){
 
   string temp_str = "";
   file.seekg( 0, file.beg );
-  bool working = false;
+  bool working = false; // indicator for "{}";
 
   while( getline( temp_str, file ) ){ // string::getline
-    if( !working ){
-      // check if this line indicates start of a .json description, i.e. "{";
-      for( size_t i = 0; i < temp_str.size(); i++ ){
-        if( !isspace( (int)temp_str[i] ) ){
-          // shall be "{";
-          if( temp_str[i] == '{' ){
-            working = true;
-          }
-        }
-      }
-    }else{
+    if( temp_str.find_first_of( "{" ) != string::npos )
+      break;
+  }
+
+  temp_str = "";
+  string key = "";
+  string value = "";
+  size_t start_quot_mark = 0;
+  size_t end_quot_mark   = 0;
+  size_t colon_mark      = 0;
+  size_t start_key       = 0;
+  size_t end_key         = 0;
+
+  while( getline( temp_str, file ) ){
+
+    if( temp_str.find_first_of( "}" ) != string::npos ){
       continue;
     }
 
-    // working; read the described JsonElem, store it in this->_obj;
-    size_t first_q_mark_pos = 0;
-    size_t end_q_mark_pos = 0;
-    size_t colon_pos = 0;
-    string key = "";
-    string value = "";
-    bool temp = false;
-
-    for( size_t i = 0; i < temp_str.size(); i++ ){
-      if( temp_str[i] == "\"" ){
-        if( temp == false ){
-          first_q_mark_pos = i;
-          temp = true;
-        }else{
-          end_q_mark_pos = ( ( (i+1)>temp_str.size() )? temp_str.size() : (i+1) );
-          // string::substr is closed at LHS, open at RHS
-          break;
-        }
-      }
+    start_quot_mark = temp_str.find_first_of( '\"' );
+    end_quot_mark   = temp_str.find_first_of( '\"', start_quot_mark+1 );
+    if( end_quot_mark == string::npos ){
+      return false;
     }
 
-    if( temp == false){
-      continue;
-      // this line have no content;
+    key = temp_str.substr( start_quot_mark, end_quot_mark+1 );
+    colon_mark = temp_str.find_first_of ( ':',  end_quot_mark+1 );
+    if( colon_mark == string::npos ){
+      return false;
     }
-    key = temp_str.substr( first_q_mark_pos, end_q_mark_pos-first_q_mark_pos );
 
-    for( size_t i = 0;
+    start_key = temp_str.find_first_of( "-123456789", colon_mark+1 );
+    end_key   = temp_str.find_first_of( ',', start_key+1 );
+    if( end_key == string::npos ){
+      end_key = temp_str.find_first_of( " \t\n\v\f\r\b" , start_key+1 );
+    }
+    value = temp_str.substr( start_key, ( (end_key+1)>temp_str.size() )?
+        temp_str.size() : end_key+1 );
+
 
 
 

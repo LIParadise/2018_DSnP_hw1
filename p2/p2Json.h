@@ -38,9 +38,10 @@ class Json
   private:
     vector<JsonElem>       _obj;  // DO NOT change this definition.
     // Use it to store JSON elements.
+
     // helper functions;
-    void parse( fstream& );
-    bool not_valid_
+    bool parse( fstream& );
+    bool valid_key( string& );
 };
 
 #endif // P2_TABLE_H
