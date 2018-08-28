@@ -41,7 +41,11 @@ class Json
 
     // helper functions;
     bool parse( fstream& );
-    bool valid_key( string& );
+    bool valid_key const( string& );
+
+    // helper data fields
+    string _fileName;
+    static const string _validKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
 };
 
 #endif // P2_TABLE_H

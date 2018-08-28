@@ -13,23 +13,23 @@
 using namespace std;
 
 // Implement member functions of class Row and Table here
-  bool
+bool
 Json::read(const string& jsonFile)
 {
+  _fileName = jsonFile;
   fstream fs;
-  fs.open( jsonFile );
+  fs.open( _fileName );
 
   return ( fs.good() && parse( fs ) );
 
   // TODO ...Done
 }
 
-void
+bool
 Json::parse( const fstream& file ){
 
   string temp_str = "";
   file.seekg( 0, file.beg );
-  bool working = false; // indicator for "{}";
 
   while( getline( temp_str, file ) ){ // string::getline
     if( temp_str.find_first_of( "{" ) != string::npos )
@@ -39,16 +39,17 @@ Json::parse( const fstream& file ){
   temp_str = "";
   string key = "";
   string value = "";
+  int    value_data = 0;
   size_t start_quot_mark = 0;
   size_t end_quot_mark   = 0;
   size_t colon_mark      = 0;
   size_t start_key       = 0;
   size_t end_key         = 0;
 
-  while( getline( temp_str, file ) ){
+  while( getline( temp_str, file ) ){ // parsing, return fail or throw exception if bad;
 
     if( temp_str.find_first_of( "}" ) != string::npos ){
-      continue;
+      break;
     }
 
     start_quot_mark = temp_str.find_first_of( '\"' );
@@ -71,14 +72,33 @@ Json::parse( const fstream& file ){
     value = temp_str.substr( start_key, ( (end_key+1)>temp_str.size() )?
         temp_str.size() : end_key+1 );
 
+    if( !valid_key( key ) ){
+      return false;
+    }
+    
+    try{
+      value_data = stoi( value, nullptr, 10 );
+    }catch( const invalid_argument& ia ){
+      cerr << "invalid value inside file \"" << _fileName << "\"" << endl;
+      return false;
+    }catch( const out_of_range& oor ) {
+      cerr << "value out of range inside file\"" << _fileName << "\"" << endl;
+      return false;
+    }
 
+    _obj.push_back( key, value_data );
+  }
 
-
-
+  return true;
+      
 }
 
+bool
+Json::valid_key( string& key ) const{
+  return ( key.find_first_not_of( _validKey ) == string::npos );
+}
 
-  ostream&
+ostream&
 operator << (ostream& os, const JsonElem& j)
 {
   return (os << "\"" << j._key << "\" : " << j._value);

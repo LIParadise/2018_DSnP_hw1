@@ -288,12 +288,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 42 - ((37 * winheight(0) + 21) / 42)
+let s:l = 48 - ((39 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-42
-normal! 06|
+48
+normal! 0100|
 wincmd w
 argglobal
 edit p2/p2Json.cpp
@@ -408,11 +408,29 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 74 - ((39 * winheight(0) + 21) / 42)
+18,26fold
+17,26fold
+29,94fold
+29,94fold
+97,99fold
+97,99fold
+17
+normal! zo
+17
+normal! zc
+29
+normal! zo
+29
+normal! zc
+97
+normal! zo
+97
+normal! zc
+let s:l = 17 - ((16 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-74
+17
 normal! 0
 wincmd w
 2wincmd w
