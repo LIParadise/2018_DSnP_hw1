@@ -39,6 +39,15 @@ class Json
     vector<JsonElem>       _obj;  // DO NOT change this definition.
     // Use it to store JSON elements.
 
+    // main functional functions;
+    void print();
+    bool add( string&, string&, string& );
+    bool sum();
+    bool ave();
+    bool max();
+    bool min();
+    bool exit();
+
     // helper functions;
     bool parse( fstream& );
     bool valid_key const( string& );

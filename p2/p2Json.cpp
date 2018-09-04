@@ -104,3 +104,16 @@ operator << (ostream& os, const JsonElem& j)
   return (os << "\"" << j._key << "\" : " << j._value);
 }
 
+void
+Json::print() {
+  
+  cout << "{\n";
+  for( size_t i = 0 ; i < _obj.size(); i++ ){
+    cout << _obj.at(i);
+    if( i != _obj.size()-1 ){
+      cout << ",\n";
+    }
+  }
+  cout << "}\n";
+  
+}

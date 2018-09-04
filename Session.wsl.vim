@@ -17,6 +17,7 @@ set history=200
 set ignorecase
 set laststatus=2
 set nomodeline
+set printoptions=paper:letter
 set ruler
 set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim80,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after
 set shiftwidth=2
@@ -28,7 +29,7 @@ set tabstop=2
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd /mnt/d/Documents/DSnP/2018/hw1
+cd /mnt/d/Document/DSnP/2018/hw1
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -158,7 +159,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 21) / 42)
+let s:l = 1 - ((0 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -288,12 +289,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 48 - ((39 * winheight(0) + 21) / 42)
+let s:l = 42 - ((30 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-48
-normal! 0100|
+42
+normal! 08|
 wincmd w
 argglobal
 edit p2/p2Json.cpp
@@ -414,6 +415,8 @@ silent! normal! zE
 29,94fold
 97,99fold
 97,99fold
+108,119fold
+108,119fold
 17
 normal! zo
 17
@@ -426,11 +429,15 @@ normal! zc
 normal! zo
 97
 normal! zc
-let s:l = 17 - ((16 * winheight(0) + 21) / 42)
+108
+normal! zo
+108
+normal! zc
+let s:l = 104 - ((103 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-17
+104
 normal! 0
 wincmd w
 2wincmd w
