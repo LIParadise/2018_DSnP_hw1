@@ -159,12 +159,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 50)
+let s:l = 27 - ((21 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+27
+normal! 03|
 tabedit p2/p2Json.h
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -175,8 +175,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 96 + 96) / 192)
-exe 'vert 2resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 1resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 2resize ' . ((&columns * 96 + 96) / 192)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -289,11 +289,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 42 - ((30 * winheight(0) + 25) / 50)
+let s:l = 48 - ((39 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-42
+48
 normal! 08|
 wincmd w
 argglobal
@@ -409,40 +409,34 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-18,26fold
-17,26fold
-29,94fold
-29,94fold
-97,99fold
-97,99fold
-108,119fold
-108,119fold
-17
+139,155fold
+139,155fold
+197,214fold
+197,214fold
+224,226fold
+224,226fold
+139
 normal! zo
-17
-normal! zc
-29
+139
 normal! zo
-29
-normal! zc
-97
+197
 normal! zo
-97
-normal! zc
-108
+197
 normal! zo
-108
-normal! zc
-let s:l = 104 - ((103 * winheight(0) + 25) / 50)
+224
+normal! zo
+224
+normal! zo
+let s:l = 126 - ((25 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-104
-normal! 0
+126
+normal! 034|
 wincmd w
 2wincmd w
-exe 'vert 1resize ' . ((&columns * 96 + 96) / 192)
-exe 'vert 2resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 1resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 2resize ' . ((&columns * 96 + 96) / 192)
 tabnext 2
 set stal=1
 if exists('s:wipebuf')

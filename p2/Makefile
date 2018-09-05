@@ -1,4 +1,4 @@
-CFLAGS = -O3 -Wall -std=c++11
+CFLAGS = -O2 -Wall -std=c++11
 CFLAGS = -g -Wall -std=c++11
 
 p2Run: p2Main.o p2Json.o

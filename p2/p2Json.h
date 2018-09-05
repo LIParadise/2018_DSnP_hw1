@@ -24,6 +24,9 @@ class JsonElem
 
     friend ostream& operator << (ostream&, const JsonElem&);
 
+    // main functional functions;
+    int getValue() const;
+
   private:
     string  _key;   // DO NOT change this definition. Use it to store key.
     int     _value; // DO NOT change this definition. Use it to store value.
@@ -35,26 +38,26 @@ class Json
     // TODO: define constructor & member functions on your own
     bool read(const string&);
 
+    // main functional functions;
+    void print();
+    bool add( string&, string& );
+    int  sum();
+    int  max();
+    int  min();
+    long double ave();
+    void exit();
+
   private:
     vector<JsonElem>       _obj;  // DO NOT change this definition.
     // Use it to store JSON elements.
 
-    // main functional functions;
-    void print();
-    bool add( string&, string&, string& );
-    bool sum();
-    bool ave();
-    bool max();
-    bool min();
-    bool exit();
-
     // helper functions;
     bool parse( fstream& );
-    bool valid_key const( string& );
+    bool valid_key ( string& ) const;
 
     // helper data fields
     string _fileName;
-    static const string _validKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+    const string _validKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
 };
 
 #endif // P2_TABLE_H

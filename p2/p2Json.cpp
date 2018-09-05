@@ -7,7 +7,10 @@
  ****************************************************************************/
 #include <iostream>
 #include <string>
-#include <cctype> // int isspace ( int );
+#include <cctype>  // int isspace ( int );
+#include <ios>     // restore cout states;
+#include <climits> // INT_MIN, INT_MAX
+#include <iomanip> // cout << setprecision (1 );
 #include "p2Json.h"
 
 using namespace std;
@@ -26,12 +29,12 @@ Json::read(const string& jsonFile)
 }
 
 bool
-Json::parse( const fstream& file ){
+Json::parse( fstream& file ){
 
   string temp_str = "";
   file.seekg( 0, file.beg );
 
-  while( getline( temp_str, file ) ){ // string::getline
+  while( getline( file, temp_str ) ){ // string::getline
     if( temp_str.find_first_of( "{" ) != string::npos )
       break;
   }
@@ -40,55 +43,70 @@ Json::parse( const fstream& file ){
   string key = "";
   string value = "";
   int    value_data = 0;
+  bool   valid_line = true;
   size_t start_quot_mark = 0;
   size_t end_quot_mark   = 0;
   size_t colon_mark      = 0;
-  size_t start_key       = 0;
-  size_t end_key         = 0;
+  size_t start_value     = 0;
+  size_t end_value       = 0;
 
-  while( getline( temp_str, file ) ){ // parsing, return fail or throw exception if bad;
+  while( getline( file, temp_str ) ){ // parsing, return fail or throw exception if bad;
+
+    valid_line = true;
+    // if (!valid_line), then this->_obj would not be modified.
 
     if( temp_str.find_first_of( "}" ) != string::npos ){
       break;
     }
 
-    start_quot_mark = temp_str.find_first_of( '\"' );
-    end_quot_mark   = temp_str.find_first_of( '\"', start_quot_mark+1 );
-    if( end_quot_mark == string::npos ){
-      return false;
+    start_quot_mark = temp_str.find_first_of( "\"" );
+    end_quot_mark   = temp_str.find_first_of( "\"", start_quot_mark+1 );
+
+    if( start_quot_mark != string::npos && end_quot_mark != string::npos ){
+      key = temp_str.substr( start_quot_mark+1, end_quot_mark-start_quot_mark-1 );
+    }else{
+      valid_line = false;
     }
 
-    key = temp_str.substr( start_quot_mark, end_quot_mark+1 );
-    colon_mark = temp_str.find_first_of ( ':',  end_quot_mark+1 );
-    if( colon_mark == string::npos ){
-      return false;
+    colon_mark = temp_str.find_first_of ( ":",  end_quot_mark+1 );
+
+    if( colon_mark != string::npos ){
+      start_value = temp_str.find_first_of( "-0123456789", colon_mark+1 );
+      // maybe there's only zero as the value...
+      end_value = temp_str.find_first_not_of( "0123456789", start_value+1 );
+      if( start_value != string::npos && end_value != string::npos ){
+        // shall be normal line, with others pending, s.t. we met ',';
+        value = temp_str.substr( start_value, end_value - start_value );
+      }else if( start_value != string::npos && end_value == string::npos ){
+        end_value = temp_str.size();
+        value = temp_str.substr( start_value, end_value - start_value );
+      }else{
+        valid_line = false;
+      }
+    }else{
+      valid_line = false;
     }
 
-    start_key = temp_str.find_first_of( "-123456789", colon_mark+1 );
-    end_key   = temp_str.find_first_of( ',', start_key+1 );
-    if( end_key == string::npos ){
-      end_key = temp_str.find_first_of( " \t\n\v\f\r\b" , start_key+1 );
-    }
-    value = temp_str.substr( start_key, ( (end_key+1)>temp_str.size() )?
-        temp_str.size() : end_key+1 );
+    if( valid_line ){
+      if( !valid_key( key ) ){
+        return false;
+      }
+      
+      try{
+        value_data = stoi( value, nullptr, 10 );
+      }catch( const invalid_argument& ia ){
+        cerr << "invalid value inside file \"" << _fileName << "\"" << endl;
+        return false;
+      }catch( const out_of_range& oor ) {
+        cerr << "value out of range inside file\"" << _fileName << "\"" << endl;
+        return false;
+      }
 
-    if( !valid_key( key ) ){
-      return false;
+      _obj.push_back( JsonElem( key, value_data ) );
     }
-    
-    try{
-      value_data = stoi( value, nullptr, 10 );
-    }catch( const invalid_argument& ia ){
-      cerr << "invalid value inside file \"" << _fileName << "\"" << endl;
-      return false;
-    }catch( const out_of_range& oor ) {
-      cerr << "value out of range inside file\"" << _fileName << "\"" << endl;
-      return false;
-    }
-
-    _obj.push_back( key, value_data );
   }
 
+  file.close();
   return true;
       
 }
@@ -98,22 +116,122 @@ Json::valid_key( string& key ) const{
   return ( key.find_first_not_of( _validKey ) == string::npos );
 }
 
-ostream&
-operator << (ostream& os, const JsonElem& j)
-{
-  return (os << "\"" << j._key << "\" : " << j._value);
-}
 
 void
 Json::print() {
   
   cout << "{\n";
-  for( size_t i = 0 ; i < _obj.size(); i++ ){
-    cout << _obj.at(i);
-    if( i != _obj.size()-1 ){
-      cout << ",\n";
+  if( !_obj.empty() ){
+    for( size_t i = 0 ; i < _obj.size(); i++ ){
+      cout << "  " << _obj.at(i) ;
+      if( i != _obj.size()-1 ){
+        cout << ",\n";
+      }else{
+        cout << "\n";
+      }
     }
   }
   cout << "}\n";
   
+}
+
+int 
+Json::sum(){
+
+  if( _obj.size() == 0 ){
+    cerr << "Error: No element found!!\n" ;
+    return 0;
+  }else{
+
+    int sum = 0;
+    for( auto& it : _obj ){
+      sum += it.getValue();
+    }
+
+    cout << "The summation of the values is: " << sum << ".\n" ;
+    return sum;
+  }
+
+}
+
+long double
+Json::ave(){
+
+  if( _obj.empty() ){
+    cerr << "Error: No element found!!\n" ;
+    return 0;
+  }else{
+    ios_base::fmtflags org_cout_flags( cout.flags() );
+    int sum = 0;
+    for( auto&it : _obj) {
+      sum += it.getValue();
+    }
+    long double ave = sum/( (long double)_obj.size() );
+    cout << fixed << setprecision(1) << "The average of the values is: " << ave << ".\n" ;
+    cout.flags( org_cout_flags );
+    return ave;
+  }
+}
+
+int
+Json::max(){
+  if( _obj.empty()){
+    cerr << "Error: No element found!!\n" ;
+    return 0;
+  }else{
+
+    int max = INT_MIN;
+    int idx = 0;
+    for( size_t i = 0; i < _obj.size(); i++ ){
+      if( _obj.at(i).getValue() > max ){
+        max = _obj.at(i).getValue();
+        idx = i;
+      }
+    }
+    cout << "The maximum element is: { " << _obj.at(idx) << " }.\n";
+    return max;
+  }
+}
+
+int
+Json::min(){
+  if( _obj.empty()){
+    cerr << "Error: No element found!!\n" ;
+    return 0;
+  }else{
+
+    int min = INT_MAX;
+    int idx = 0;
+    for( size_t i = 0; i < _obj.size(); i++ ){
+      if( _obj.at(i).getValue() < min ){
+        min = _obj.at(i).getValue();
+        idx = i;
+      }
+    }
+    cout << "The minimum element is: { " << _obj.at(idx) << " }.\n";
+    return min;
+  }
+}
+
+bool
+Json::add( string& new_key, string& new_value ){
+
+  _obj.push_back( (JsonElem( new_key, stoi( new_value, nullptr, 10 ) )  ) );
+  return true;
+}
+
+void
+Json::exit(){
+  _obj.clear();
+}
+
+int
+JsonElem::getValue() const{
+  return _value;
+}
+
+ostream&
+operator << (ostream& os, const JsonElem& j)
+{
+  return (os << "\"" << j._key << "\" : " << j._value);
 }
