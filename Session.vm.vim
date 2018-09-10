@@ -8,6 +8,7 @@ vnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(expand((exists("g:netrw_gx")? g:netrw_gx : '<cfile>')),netrw#CheckIfRemote())
 let &cpo=s:cpo_save
 unlet s:cpo_save
+set ambiwidth=double
 set autoindent
 set backspace=indent,eol,start
 set expandtab
@@ -17,6 +18,7 @@ set history=200
 set ignorecase
 set laststatus=2
 set nomodeline
+set printoptions=paper:letter
 set ruler
 set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim80,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after
 set shiftwidth=2
@@ -28,7 +30,7 @@ set tabstop=2
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd /home/liparadise/host/Document/DSnP/2018/hw1
+cd ~/host/Document/DSnP/2018/hw1
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -158,7 +160,7 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 21) / 42)
+let s:l = 1 - ((0 * winheight(0) + 25) / 51)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -174,8 +176,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 96 + 96) / 192)
-exe 'vert 2resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 1resize ' . ((&columns * 92 + 92) / 184)
+exe 'vert 2resize ' . ((&columns * 91 + 92) / 184)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -288,12 +290,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 48 - ((39 * winheight(0) + 21) / 42)
+let s:l = 48 - ((47 * winheight(0) + 25) / 51)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 48
-normal! 0100|
+normal! 022|
 wincmd w
 argglobal
 edit p2/p2Json.cpp
@@ -408,34 +410,16 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-18,26fold
-17,26fold
-29,94fold
-29,94fold
-97,99fold
-97,99fold
-17
-normal! zo
-17
-normal! zc
-29
-normal! zo
-29
-normal! zc
-97
-normal! zo
-97
-normal! zc
-let s:l = 17 - ((16 * winheight(0) + 21) / 42)
+let s:l = 97 - ((4 * winheight(0) + 25) / 51)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-17
-normal! 0
+97
+normal! 07|
 wincmd w
 2wincmd w
-exe 'vert 1resize ' . ((&columns * 96 + 96) / 192)
-exe 'vert 2resize ' . ((&columns * 95 + 96) / 192)
+exe 'vert 1resize ' . ((&columns * 92 + 92) / 184)
+exe 'vert 2resize ' . ((&columns * 91 + 92) / 184)
 tabnext 2
 set stal=1
 if exists('s:wipebuf')

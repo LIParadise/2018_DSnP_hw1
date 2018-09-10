@@ -91,7 +91,7 @@ Json::parse( fstream& file ){
       if( !valid_key( key ) ){
         return false;
       }
-      
+
       try{
         value_data = stoi( value, nullptr, 10 );
       }catch( const invalid_argument& ia ){
@@ -104,14 +104,16 @@ Json::parse( fstream& file ){
 
       if( keys.find( key ) == keys.end() ){
         _obj.push_back( JsonElem( key, value_data ) );
+        keys.insert( key) ;
       }else{
         cout << "Error: Key \"" << key << "\" is repeated!!" << endl;
       }
+    }
   }
 
   file.close();
   return true;
-      
+
 }
 
 bool
@@ -119,13 +121,14 @@ Json::valid_key( string& key ) const{
   return ( key.find_first_not_of( _validKey ) == string::npos );
 }
 
-bool exist_key( string& key ){
+bool
+Json::exist_key( string& key ){
   return ! ( keys.find( key ) == keys.end() );
 }
 
 void
 Json::print() {
-  
+
   cout << "{\n";
   if( !_obj.empty() ){
     for( size_t i = 0 ; i < _obj.size(); i++ ){
@@ -138,7 +141,7 @@ Json::print() {
     }
   }
   cout << "}\n";
-  
+
 }
 
 int 
@@ -223,12 +226,14 @@ bool
 Json::add( string& new_key, string& new_value ){
 
   _obj.push_back( (JsonElem( new_key, stoi( new_value, nullptr, 10 ) )  ) );
+  keys.insert( new_key );
   return true;
 }
 
 void
 Json::exit(){
   _obj.clear();
+  keys.clear();
 }
 
 int
@@ -236,7 +241,7 @@ JsonElem::getValue() const{
   return _value;
 }
 
-ostream&
+  ostream&
 operator << (ostream& os, const JsonElem& j)
 {
   return (os << "\"" << j._key << "\" : " << j._value);

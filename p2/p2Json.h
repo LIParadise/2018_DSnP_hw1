@@ -12,7 +12,7 @@
 #include <string>
 #include <unordered_set>
 #include <fstream>
-#include <map>     // store 'key's;
+#include <set>     // store 'key's;
 
 using namespace std;
 
@@ -62,7 +62,7 @@ class Json
     // helper data fields
     string _fileName;
     const string _validKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
-    map<string> keys;
+    set<string> keys;
 };
 
 #endif // P2_TABLE_H

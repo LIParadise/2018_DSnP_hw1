@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <limits> // std::numeric_limits<std::streamsize> max();
 #include "p2Json.h"
 
 using namespace std;
@@ -32,17 +33,22 @@ int main()
   string input_cmd1, input_cmd2, input_cmd3, extra_cmd;
   stringstream ass; // "a stringstream"
   string str;
+  cin.ignore(numeric_limits<streamsize>::max() , '\n' );
   while (true) {
     // cout << "Enter command: ";
-    cout << "Enter command: ";
-    getline( cin, str );
     input_cmd1.clear();
     input_cmd2.clear();
     input_cmd3.clear();
     extra_cmd.clear();
-    ass = (stringstream)str;
+    str.clear();
+    ass.str("");
+    ass.clear();
 
+    cout << "Enter command: ";
+    getline( cin, str );
+    ass.str(str);
     ass >> input_cmd1;
+
     if( input_cmd1 == "ADD" ){
       if( ass.eof() ){
         cout << "Error: Missing argument!!" << endl;
@@ -60,6 +66,7 @@ int main()
       }
       
       if( json.exist_key( input_cmd2 ) ){
+        cout << "Error: Key \"" << input_cmd2 << "\" is repeated!!" << endl;
         continue;
       }else{
         json.add( input_cmd2, input_cmd3 );
