@@ -12,6 +12,7 @@
 #include <string>
 #include <unordered_set>
 #include <fstream>
+#include <map>     // store 'key's;
 
 using namespace std;
 
@@ -47,6 +48,9 @@ class Json
     long double ave();
     void exit();
 
+    // helper functions
+    bool exist_key( string& ); // tell if the key is already stored;
+
   private:
     vector<JsonElem>       _obj;  // DO NOT change this definition.
     // Use it to store JSON elements.
@@ -58,6 +62,7 @@ class Json
     // helper data fields
     string _fileName;
     const string _validKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+    map<string> keys;
 };
 
 #endif // P2_TABLE_H

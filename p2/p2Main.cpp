@@ -6,6 +6,7 @@
   Copyright    [ Copyleft(c) 2016-present DVLab, GIEE, NTU, Taiwan ]
  ****************************************************************************/
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "p2Json.h"
 
@@ -28,14 +29,42 @@ int main()
 
   // TODO read and execute commands
   // cout << "Enter command: ";
-  string input_cmd1, input_cmd2, input_cmd3;
+  string input_cmd1, input_cmd2, input_cmd3, extra_cmd;
+  stringstream ass; // "a stringstream"
+  string str;
   while (true) {
     // cout << "Enter command: ";
     cout << "Enter command: ";
-    cin >> input_cmd1 ;
+    getline( cin, str );
+    input_cmd1.clear();
+    input_cmd2.clear();
+    input_cmd3.clear();
+    extra_cmd.clear();
+    ass = (stringstream)str;
+
+    ass >> input_cmd1;
     if( input_cmd1 == "ADD" ){
-      cin >> input_cmd2 >> input_cmd3 ;
-      json.add( input_cmd2, input_cmd3 );
+      if( ass.eof() ){
+        cout << "Error: Missing argument!!" << endl;
+        continue;
+      }
+      ass >> input_cmd2;
+      if( ass.eof() ){
+        cout << "Error: Missing argument!!" << endl;
+        continue;
+      }
+      ass >> input_cmd3 >> extra_cmd;
+      if( !extra_cmd.empty() ){
+        cout << "Error: Extra argument \"" << extra_cmd << "\"!!" << endl;
+        continue;
+      }
+      
+      if( json.exist_key( input_cmd2 ) ){
+        continue;
+      }else{
+        json.add( input_cmd2, input_cmd3 );
+      }
+
     }else if( input_cmd1 == "AVE" ){
       json.ave();
     }else if( input_cmd1 == "SUM" ){

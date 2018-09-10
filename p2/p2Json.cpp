@@ -102,8 +102,11 @@ Json::parse( fstream& file ){
         return false;
       }
 
-      _obj.push_back( JsonElem( key, value_data ) );
-    }
+      if( keys.find( key ) == keys.end() ){
+        _obj.push_back( JsonElem( key, value_data ) );
+      }else{
+        cout << "Error: Key \"" << key << "\" is repeated!!" << endl;
+      }
   }
 
   file.close();
@@ -116,6 +119,9 @@ Json::valid_key( string& key ) const{
   return ( key.find_first_not_of( _validKey ) == string::npos );
 }
 
+bool exist_key( string& key ){
+  return ! ( keys.find( key ) == keys.end() );
+}
 
 void
 Json::print() {
